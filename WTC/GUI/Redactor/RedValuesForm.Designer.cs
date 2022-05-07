@@ -37,7 +37,7 @@
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "RedValuesForm";
-            this.Text = "RedValuesForm";
+            this.Text = "Редактор БЗ. Возможные значения признаков";
             this.ResumeLayout(false);
 
         }

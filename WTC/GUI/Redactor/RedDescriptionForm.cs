@@ -111,5 +111,10 @@ namespace WTC.GUI
             string selectedState = comboBox1.SelectedItem.ToString();
             test(selectedState);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

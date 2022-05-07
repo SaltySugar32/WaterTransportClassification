@@ -37,7 +37,7 @@
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "RedValuesForClassForm";
-            this.Text = "RedValuesForClassForm";
+            this.Text = "Редактор БЗ. Возможные значения признака для класса водного транспорта";
             this.ResumeLayout(false);
 
         }

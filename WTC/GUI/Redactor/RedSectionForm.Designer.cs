@@ -126,7 +126,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Name = "RedSectionForm";
-            this.Text = "RedSectionForm";
+            this.Text = "Редактор БЗ";
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
