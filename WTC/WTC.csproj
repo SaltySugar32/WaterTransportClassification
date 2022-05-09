@@ -16,7 +16,6 @@
   <ItemGroup>
     <Folder Include="Database\" />
     <Folder Include="GUI\Classifier\" />
-    <Folder Include="Managers\" />
   </ItemGroup>
 
 </Project>
