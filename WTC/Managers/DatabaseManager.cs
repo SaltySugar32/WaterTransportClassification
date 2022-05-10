@@ -307,6 +307,7 @@ namespace WTC.Managers
         public List<AttributeModel> get_description(int class_id)
         {
             List<AttributeModel> attributes = new List<AttributeModel>();
+            List<int> attr_ids = new List<int>();
             openCon();
             string query = "SELECT * FROM description WHERE class_id='" + class_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
@@ -316,12 +317,17 @@ namespace WTC.Managers
                 while (reader.Read())
                 {
                     int attr_id = Convert.ToInt32(reader["attribute_id"]);
-                    AttributeModel temp = get_attribute(attr_id);
-                    if(temp != null)
-                        attributes.Add(temp);
+                    attr_ids.Add(attr_id);
                 }
             }
             reader.Close();
+
+            foreach (int attr_id in attr_ids)
+            {
+                AttributeModel temp = get_attribute(attr_id);
+                if (temp != null)
+                    attributes.Add(temp);
+            }
             closeCon();
             return attributes;
         }

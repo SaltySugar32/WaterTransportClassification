@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WTC.Managers;
 
 namespace WTC.GUI
 {
@@ -16,8 +17,8 @@ namespace WTC.GUI
         {
             InitializeComponent();
             DGVInit();
-            CBInit();
-            test();
+            load_classes();
+            load_attributes();
         }
 
         public void DGVInit()
@@ -62,37 +63,66 @@ namespace WTC.GUI
             dataGridView2.EnableHeadersVisualStyles = false;
         }
 
-        public void CBInit()
+        public void load_classes()
         {
-            for (int i = 0; i < 5; i++)
-                comboBox1.Items.Add("класс " + i);
+            comboBox1.Items.Clear();
+
+            DatabaseManager db = new DatabaseManager();
+            List<ClassModel> classes = db.get_classes();
+            foreach (ClassModel cls in classes)
+            {
+                comboBox1.Items.Add(cls.name);
+            }
 
             comboBox1.SelectedIndex = 0;
             comboBox1.Refresh();
         }
 
-        public void test(string test = "")
+        public void load_attributes()
         {
             dataGridView1.Rows.Clear();
             dataGridView2.Rows.Clear();
 
-            dataGridView1.Rows.Add("test1");
-            dataGridView1.Rows.Add("test2");
-            dataGridView1.Rows.Add("test3");
-            dataGridView1.Rows.Add("test4");
-            dataGridView2.Rows.Add("test5");
+            DatabaseManager db = new DatabaseManager();
+            List<ClassModel> classes = db.get_classes();
+            List<AttributeModel> attributes = db.get_attributes();
+            ClassModel selected_class = classes[comboBox1.SelectedIndex];
+            List<AttributeModel> description = db.get_description(selected_class.id);
 
-            if(test != null)
-                dataGridView2.Rows.Add(test);
+            foreach (AttributeModel attr in attributes)
+            {
+                bool found = false;
+                foreach(AttributeModel desc in description)
+                {
+                    if (desc.name == attr.name)
+                        found = true;
+                }
+
+                if (found)
+                    dataGridView2.Rows.Add(attr.name);
+                else
+                    dataGridView1.Rows.Add(attr.name);
+            }
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 1)
             {
+                DatabaseManager db = new DatabaseManager();
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                dataGridView1.Rows.Remove(row);
-                dataGridView2.Rows.Add(row.Cells[0].Value);
+                string attr_name = (string)row.Cells["attr"].Value;
+                int attr_id = db.search_attribute(attr_name);
+                if (attr_id >= 0)
+                {
+                    List<ClassModel> classes = db.get_classes();
+                    ClassModel selected_class = classes[comboBox1.SelectedIndex];
+
+                    db.add_description(selected_class.id, attr_id);
+                    dataGridView1.Rows.Remove(row);
+                    dataGridView2.Rows.Add(attr_name);
+                }
             }
         }
 
@@ -100,16 +130,27 @@ namespace WTC.GUI
         {
             if (e.ColumnIndex == 1)
             {
+                DatabaseManager db = new DatabaseManager();
                 DataGridViewRow row = dataGridView2.Rows[e.RowIndex];
-                dataGridView2.Rows.Remove(row);
-                dataGridView1.Rows.Add(row.Cells[0].Value);
+                string attr_name = (string)row.Cells["desc"].Value;
+                int attr_id = db.search_attribute(attr_name);
+                if (attr_id >= 0)
+                {
+                    List<ClassModel> classes = db.get_classes();
+                    ClassModel selected_class = classes[comboBox1.SelectedIndex];
+
+                    db.remove_description(selected_class.id, attr_id);
+
+                    dataGridView2.Rows.Remove(row);
+                    dataGridView1.Rows.Add(attr_name);
+                }
+                
             }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedState = comboBox1.SelectedItem.ToString();
-            test(selectedState);
+            load_attributes();
         }
 
         private void button1_Click(object sender, EventArgs e)
