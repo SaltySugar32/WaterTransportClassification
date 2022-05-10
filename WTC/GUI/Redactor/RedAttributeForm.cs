@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WTC.Managers;
 
 namespace WTC.GUI
 {
@@ -16,7 +17,7 @@ namespace WTC.GUI
         {
             InitializeComponent();
             DGVInit();
-            test();
+            load_attributes();
         }
 
         public void DGVInit()
@@ -43,12 +44,16 @@ namespace WTC.GUI
             dataGridView1.EnableHeadersVisualStyles = false;
         }
 
-        public void test()
+        public void load_attributes()
         {
-            dataGridView1.Rows.Add("test1");
-            dataGridView1.Rows.Add("test2");
-            dataGridView1.Rows.Add("test3");
-            dataGridView1.Rows.Add("test4");
+            dataGridView1.Rows.Clear();
+
+            DatabaseManager db = new DatabaseManager();
+            List<AttributeModel> attributes = db.get_attributes();
+            foreach (AttributeModel attribute in attributes)
+            {
+                dataGridView1.Rows.Add(attribute.name);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -58,7 +63,16 @@ namespace WTC.GUI
 
         public void AddAttr()
         {
-            dataGridView1.Rows.Add(textBox1.Text);
+            DatabaseManager db = new DatabaseManager();
+            int id = db.search_attribute(textBox1.Text);
+            if (id < 0)
+            {
+                dataGridView1.Rows.Add(textBox1.Text);
+                db.add_attribute(textBox1.Text, 0);
+                MessageBox.Show(string.Format("Добавлен признак: {0}.", textBox1.Text), "Результат", MessageBoxButtons.OK);
+            }
+            else
+                MessageBox.Show(string.Format("Ошибка. Признак {0} уже существует.", textBox1.Text), "Результат", MessageBoxButtons.OK);
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -66,8 +80,18 @@ namespace WTC.GUI
             if (e.ColumnIndex == 1)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                if (MessageBox.Show(string.Format("Удалить признак: {0}?", row.Cells["attr"].Value), "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                string attr_name = (string)row.Cells["attr"].Value;
+                if (MessageBox.Show(string.Format("Удалить признак: {0}?", attr_name), "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    DatabaseManager db = new DatabaseManager();
+                    int attr_id = db.search_attribute(attr_name);
+                    if (attr_id >= 0)
+                    {
+                        db.remove_attribute(attr_name);
+                        db.remove_description_by_attribute(attr_id);
+                        db.remove_values_by_attribute(attr_id);
+                        db.remove_classvalues_by_attribute(attr_id);
+                    }
                     dataGridView1.Rows.Remove(row);
                 }
             }

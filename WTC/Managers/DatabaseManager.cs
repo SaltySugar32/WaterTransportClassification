@@ -63,10 +63,10 @@ namespace WTC.Managers
             closeCon();
         }
 
-        public void remove_attribute(string name, int type)
+        public void remove_attribute(string name)
         {
             openCon();
-            string query = "DELETE FROM attributes WHERE name='" + name + "' AND type='" + type + "'"; 
+            string query = "DELETE FROM attributes WHERE name='" + name + "'"; 
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             cmd.ExecuteNonQuery();
             closeCon();
