@@ -72,6 +72,15 @@ namespace WTC.Managers
             closeCon();
         }
 
+        public void update_attribute(string name, int type)
+        {
+            openCon();
+            string query = "UPDATE attributes SET type='" + type + "' WHERE name='" + name + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
         public void add_description(int class_id, int attr_id)
         {
             openCon();
