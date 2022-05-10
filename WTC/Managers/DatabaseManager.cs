@@ -197,23 +197,26 @@ namespace WTC.Managers
 
                 wtclass = new ClassModel(id, name);
             }
+            reader.Close();
             closeCon();
             return wtclass;
         }
 
-        public bool search_class(string name)
+        public int search_class(string name)
         {
             openCon();
+            int id = -1;
             string query = "SELECT * FROM classes WHERE name='" + name + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             SQLiteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
-                closeCon();
-                return true;
+                reader.Read();
+                id = Convert.ToInt32(reader["id"]);
             }
+            reader.Close();
             closeCon();
-            return false;
+            return id;
         }
 
         public List<ClassModel> get_classes()
@@ -233,6 +236,7 @@ namespace WTC.Managers
                     classes.Add(temp);
                 }
             }
+            reader.Close();
             closeCon();
             return classes;
         }
@@ -254,24 +258,27 @@ namespace WTC.Managers
 
                 attribute = new AttributeModel(id, name, type);
             }
+            reader.Close();
             closeCon();
 
             return attribute;
         }
 
-        public bool search_attribute(string name)
+        public int search_attribute(string name)
         {
             openCon();
+            int id = -1;
             string query = "SELECT * FROM attributes WHERE name='" + name + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             SQLiteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
-                closeCon();
-                return true;
+                reader.Read();
+                id = Convert.ToInt32(reader["id"]);
             }
+            reader.Close();
             closeCon();
-            return false;
+            return id;
         }
 
         public List<AttributeModel> get_attributes()
@@ -292,6 +299,7 @@ namespace WTC.Managers
                     attributes.Add(temp);
                 }
             }
+            reader.Close();
             closeCon();
             return attributes;
         }
@@ -313,6 +321,7 @@ namespace WTC.Managers
                         attributes.Add(temp);
                 }
             }
+            reader.Close();
             closeCon();
             return attributes;
         }
@@ -329,6 +338,7 @@ namespace WTC.Managers
                 reader.Read();
                 value = (string)reader["possible_values"];
             }
+            reader.Close();
             closeCon();
             return value;
         }
@@ -345,6 +355,7 @@ namespace WTC.Managers
                 reader.Read();
                 value = (string)reader["possible_values"];
             }
+            reader.Close();
             closeCon();
             return value;
         }

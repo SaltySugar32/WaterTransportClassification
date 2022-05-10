@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WTC.Managers;
 
 namespace WTC.GUI
 {
@@ -16,7 +17,7 @@ namespace WTC.GUI
         {
             InitializeComponent();
             DGVInit();
-            test();
+            load_classes();
 
         }
 
@@ -46,12 +47,16 @@ namespace WTC.GUI
 
         }
 
-        public void test()
+        public void load_classes()
         {
-            dataGridView1.Rows.Add("test1");
-            dataGridView1.Rows.Add("test2");
-            dataGridView1.Rows.Add("test3");
-            dataGridView1.Rows.Add("test4");
+            dataGridView1.Rows.Clear();
+
+            DatabaseManager db = new DatabaseManager();
+            List<ClassModel> classes = db.get_classes();
+            foreach (ClassModel cls in classes)
+            {
+                dataGridView1.Rows.Add(cls.name);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -61,7 +66,16 @@ namespace WTC.GUI
 
         public void AddClass()
         {
-            dataGridView1.Rows.Add(textBox1.Text);
+            DatabaseManager db = new DatabaseManager();
+            int id = db.search_class(textBox1.Text);
+            if (id < 0)
+            {
+                dataGridView1.Rows.Add(textBox1.Text);
+                db.add_class(textBox1.Text);
+                MessageBox.Show(string.Format("Добавлен класс: {0}.", textBox1.Text), "Результат", MessageBoxButtons.OK);
+            }
+            else
+                MessageBox.Show(string.Format("Ошибка. Класс {0} уже существует.", textBox1.Text), "Результат", MessageBoxButtons.OK);
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -69,8 +83,17 @@ namespace WTC.GUI
             if (e.ColumnIndex == 1)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                if (MessageBox.Show(string.Format("Удалить класс водного транспорта: {0}?", row.Cells["class"].Value), "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                string class_name = (string)row.Cells["class"].Value;
+                if (MessageBox.Show(string.Format("Удалить класс водного транспорта: {0}?", class_name), "Подтверждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    DatabaseManager db = new DatabaseManager();
+                    int class_id = db.search_class(class_name);
+                    if (class_id >= 0)
+                    {
+                        db.remove_class(class_name);
+                        db.remove_description_by_class(class_id);
+                        db.remove_classvalues_by_class(class_id);
+                    }
                     dataGridView1.Rows.Remove(row);
                 }
             }
