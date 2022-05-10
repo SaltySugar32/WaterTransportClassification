@@ -135,5 +135,148 @@ namespace WTC.Managers
             cmd.ExecuteNonQuery();
             closeCon();
         }
+
+        public Class get_class(int class_id)
+        {
+            openCon();
+            string query = "SELECT * FROM classes WHERE id='" + class_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["id"]);
+                    string name = (string)reader["name"];
+                    Class temp = new Class(id, name);
+                    closeCon();
+                    return temp;
+                }
+            }
+            closeCon();
+            return null;
+        }
+
+        public List<Class> get_classes()
+        {
+            List<Class> classes = new List<Class>();
+            openCon();
+            string query = "SELECT * FROM classes";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["id"]);
+                    string name = (string)reader["name"];
+                    Class temp = new Class(id, name);
+                    classes.Add(temp);
+                }
+            }
+            closeCon();
+            return classes;
+        }
+
+        public Attribute get_attribute(int attr_id)
+        {
+            openCon();
+            string query = "SELECT * FROM attributes WHERE id='" + attr_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["id"]);
+                    string name = (string)reader["name"];
+                    int type = Convert.ToInt32(reader["type"]);
+                    Attribute temp = new Attribute(id, name, type);
+                    closeCon();
+                    return temp;
+                }
+            }
+            closeCon();
+            return null;
+        }
+
+        public List<Attribute> get_attributes()
+        {
+            List<Attribute> attributes = new List<Attribute>();
+            openCon();
+            string query = "SELECT * FROM attributes";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["id"]);
+                    string name = (string)reader["name"];
+                    int type = Convert.ToInt32(reader["type"]);
+                    Attribute temp = new Attribute(id, name, type);
+                    attributes.Add(temp);
+                }
+            }
+            closeCon();
+            return attributes;
+        }
+
+        public List<Attribute> get_description(int class_id)
+        {
+            List<Attribute> attributes = new List<Attribute>();
+            openCon();
+            string query = "SELECT * FROM description WHERE class_id='" + class_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    int attr_id = Convert.ToInt32(reader["attribute_id"]);
+                    Attribute temp = get_attribute(attr_id);
+                    if(temp != null)
+                        attributes.Add(temp);
+                }
+            }
+            closeCon();
+            return attributes;
+        }
+
+        public string get_value(int attr_id)
+        {
+            string value = null;
+            openCon();
+            string query = "SELECT * FROM generalvalues WHERE attribute_id='" + attr_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    value = (string)reader["possible_values"];
+                }
+            }
+            closeCon();
+            return value;
+        }
+
+        public string get_classvalue(int class_id, int attr_id)
+        {
+            string value = null;
+            openCon();
+            string query = "SELECT * FROM classvalues WHERE class_id='" + class_id + "' AND attribute_id='" + attr_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    value = (string)reader["possible_values"];
+                }
+            }
+            closeCon();
+            return value;
+        }
     }
 }

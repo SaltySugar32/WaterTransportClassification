@@ -12,7 +12,7 @@ namespace WTC.Managers
         public string name;
         public List<Attribute> description;
 
-        Class(int id, string name)
+        public Class(int id, string name)
         {
             this.id = id;
             this.name = name;
@@ -26,7 +26,7 @@ namespace WTC.Managers
         public int type;
         public string values;
 
-        Attribute(int id, string name, int type)
+        public Attribute(int id, string name, int type)
         {
             this.id=id;
             this.name=name;
