@@ -321,6 +321,7 @@ namespace WTC.Managers
                 }
             }
             reader.Close();
+            closeCon();
 
             foreach (int attr_id in attr_ids)
             {
@@ -328,7 +329,6 @@ namespace WTC.Managers
                 if (temp != null)
                     attributes.Add(temp);
             }
-            closeCon();
             return attributes;
         }
 
