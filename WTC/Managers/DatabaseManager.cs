@@ -139,22 +139,21 @@ namespace WTC.Managers
         public Class get_class(int class_id)
         {
             openCon();
+            Class wtclass = null;
             string query = "SELECT * FROM classes WHERE id='" + class_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             SQLiteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
-                while (reader.Read())
-                {
-                    int id = Convert.ToInt32(reader["id"]);
-                    string name = (string)reader["name"];
-                    Class temp = new Class(id, name);
-                    closeCon();
-                    return temp;
-                }
+                reader.Read();
+
+                int id = Convert.ToInt32(reader["id"]);
+                string name = (string)reader["name"];
+
+                wtclass = new Class(id, name);
             }
             closeCon();
-            return null;
+            return wtclass;
         }
 
         public List<Class> get_classes()
@@ -181,23 +180,23 @@ namespace WTC.Managers
         public Attribute get_attribute(int attr_id)
         {
             openCon();
+            Attribute attribute = null;
             string query = "SELECT * FROM attributes WHERE id='" + attr_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             SQLiteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
-                while (reader.Read())
-                {
-                    int id = Convert.ToInt32(reader["id"]);
-                    string name = (string)reader["name"];
-                    int type = Convert.ToInt32(reader["type"]);
-                    Attribute temp = new Attribute(id, name, type);
-                    closeCon();
-                    return temp;
-                }
+                reader.Read();
+
+                int id = Convert.ToInt32(reader["id"]);
+                string name = (string)reader["name"];
+                int type = Convert.ToInt32(reader["type"]);
+
+                attribute = new Attribute(id, name, type);
             }
             closeCon();
-            return null;
+
+            return attribute;
         }
 
         public List<Attribute> get_attributes()
@@ -252,10 +251,8 @@ namespace WTC.Managers
             SQLiteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
-                while (reader.Read())
-                {
-                    value = (string)reader["possible_values"];
-                }
+                reader.Read();
+                value = (string)reader["possible_values"];
             }
             closeCon();
             return value;
@@ -270,10 +267,8 @@ namespace WTC.Managers
             SQLiteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
-                while (reader.Read())
-                {
-                    value = (string)reader["possible_values"];
-                }
+                reader.Read();
+                value = (string)reader["possible_values"];
             }
             closeCon();
             return value;
