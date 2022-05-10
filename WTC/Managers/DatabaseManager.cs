@@ -93,6 +93,24 @@ namespace WTC.Managers
             closeCon();
         }
 
+        public void remove_description_by_class(int class_id)
+        {
+            openCon();
+            string query = "DELETE FROM description WHERE class_id='" + class_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
+        public void remove_description_by_attribute(int attr_id)
+        {
+            openCon();
+            string query = "DELETE FROM description WHERE attribute_id='" + attr_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
         public void add_values(int attr_id, string values)
         {
             openCon();
@@ -109,6 +127,15 @@ namespace WTC.Managers
         {
             openCon();
             string query = "DELETE FROM generalvalues WHERE attribute_id='" + attr_id + "' AND possible_values='" + values + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
+        public void remove_values_by_attribute(int attr_id)
+        {
+            openCon();
+            string query = "DELETE FROM generalvalues WHERE attribute_id='" + attr_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             cmd.ExecuteNonQuery();
             closeCon();
@@ -136,10 +163,28 @@ namespace WTC.Managers
             closeCon();
         }
 
-        public Class get_class(int class_id)
+        public void remove_classvalues_by_class(int class_id)
         {
             openCon();
-            Class wtclass = null;
+            string query = "DELETE FROM classvalues WHERE class_id='" + class_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
+        public void remove_classvalues_by_attribute(int attr_id)
+        {
+            openCon();
+            string query = "DELETE FROM classvalues WHERE attribute_id='" + attr_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
+        public ClassModel get_class(int class_id)
+        {
+            openCon();
+            ClassModel wtclass = null;
             string query = "SELECT * FROM classes WHERE id='" + class_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             SQLiteDataReader reader = cmd.ExecuteReader();
@@ -150,15 +195,30 @@ namespace WTC.Managers
                 int id = Convert.ToInt32(reader["id"]);
                 string name = (string)reader["name"];
 
-                wtclass = new Class(id, name);
+                wtclass = new ClassModel(id, name);
             }
             closeCon();
             return wtclass;
         }
 
-        public List<Class> get_classes()
+        public bool search_class(string name)
         {
-            List<Class> classes = new List<Class>();
+            openCon();
+            string query = "SELECT * FROM classes WHERE name='" + name + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                closeCon();
+                return true;
+            }
+            closeCon();
+            return false;
+        }
+
+        public List<ClassModel> get_classes()
+        {
+            List<ClassModel> classes = new List<ClassModel>();
             openCon();
             string query = "SELECT * FROM classes";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
@@ -169,7 +229,7 @@ namespace WTC.Managers
                 {
                     int id = Convert.ToInt32(reader["id"]);
                     string name = (string)reader["name"];
-                    Class temp = new Class(id, name);
+                    ClassModel temp = new ClassModel(id, name);
                     classes.Add(temp);
                 }
             }
@@ -177,10 +237,10 @@ namespace WTC.Managers
             return classes;
         }
 
-        public Attribute get_attribute(int attr_id)
+        public AttributeModel get_attribute(int attr_id)
         {
             openCon();
-            Attribute attribute = null;
+            AttributeModel attribute = null;
             string query = "SELECT * FROM attributes WHERE id='" + attr_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             SQLiteDataReader reader = cmd.ExecuteReader();
@@ -192,16 +252,31 @@ namespace WTC.Managers
                 string name = (string)reader["name"];
                 int type = Convert.ToInt32(reader["type"]);
 
-                attribute = new Attribute(id, name, type);
+                attribute = new AttributeModel(id, name, type);
             }
             closeCon();
 
             return attribute;
         }
 
-        public List<Attribute> get_attributes()
+        public bool search_attribute(string name)
         {
-            List<Attribute> attributes = new List<Attribute>();
+            openCon();
+            string query = "SELECT * FROM attributes WHERE name='" + name + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                closeCon();
+                return true;
+            }
+            closeCon();
+            return false;
+        }
+
+        public List<AttributeModel> get_attributes()
+        {
+            List<AttributeModel> attributes = new List<AttributeModel>();
             openCon();
             string query = "SELECT * FROM attributes";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
@@ -213,7 +288,7 @@ namespace WTC.Managers
                     int id = Convert.ToInt32(reader["id"]);
                     string name = (string)reader["name"];
                     int type = Convert.ToInt32(reader["type"]);
-                    Attribute temp = new Attribute(id, name, type);
+                    AttributeModel temp = new AttributeModel(id, name, type);
                     attributes.Add(temp);
                 }
             }
@@ -221,9 +296,9 @@ namespace WTC.Managers
             return attributes;
         }
 
-        public List<Attribute> get_description(int class_id)
+        public List<AttributeModel> get_description(int class_id)
         {
-            List<Attribute> attributes = new List<Attribute>();
+            List<AttributeModel> attributes = new List<AttributeModel>();
             openCon();
             string query = "SELECT * FROM description WHERE class_id='" + class_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
@@ -233,7 +308,7 @@ namespace WTC.Managers
                 while (reader.Read())
                 {
                     int attr_id = Convert.ToInt32(reader["attribute_id"]);
-                    Attribute temp = get_attribute(attr_id);
+                    AttributeModel temp = get_attribute(attr_id);
                     if(temp != null)
                         attributes.Add(temp);
                 }

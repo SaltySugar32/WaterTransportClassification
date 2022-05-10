@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace WTC.Managers
 {
-    public class Class
+    public class ClassModel
     {
         public int id;
         public string name;
-        public List<Attribute> description;
+        public List<AttributeModel> description;
 
-        public Class(int id, string name)
+        public ClassModel(int id, string name)
         {
             this.id = id;
             this.name = name;
         }
     }
 
-    public class Attribute
+    public class AttributeModel
     {
         public int id;
         public string name;
         public int type;
         public string values;
 
-        public Attribute(int id, string name, int type)
+        public AttributeModel(int id, string name, int type)
         {
             this.id=id;
             this.name=name;
