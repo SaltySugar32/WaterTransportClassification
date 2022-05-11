@@ -79,11 +79,11 @@ namespace WTC.GUI
             switch (index)
             {
                 case 0:
-                    groupBox3.Text = text + "печеслисление значений, разделенных пробелом";
+                    groupBox3.Text = text + "множество значений, разделенных пробелом";
                     break;
 
                 default:
-                    groupBox3.Text = text + "нижняя и верхняя граница, разделенные пробелом";
+                    groupBox3.Text = text + "диапазон (нижняя и верхняя границы), разделенные пробелом";
                     break;
             }
         }
