@@ -24,27 +24,35 @@ namespace WTC.GUI
 
         public void load_types()
         {
-            DatabaseManager db = new DatabaseManager();
-            List<AttributeModel> attributes = db.get_attributes();
-            AttributeModel selected_attribute = attributes[comboBox1.SelectedIndex];
-
             comboBox2.Items.Clear();
 
-            comboBox2.Items.Add("Качественный признак");
-            comboBox2.Items.Add("Количественный признак");
+            if (comboBox1.Items.Count != 0)
+            {
+                DatabaseManager db = new DatabaseManager();
+                List<AttributeModel> attributes = db.get_attributes();
+                AttributeModel selected_attribute = attributes[comboBox1.SelectedIndex];
 
-            comboBox2.SelectedIndex = selected_attribute.type;
+                comboBox2.Items.Add("Качественный признак");
+                comboBox2.Items.Add("Количественный признак");
+
+                comboBox2.SelectedIndex = selected_attribute.type;
+            }
+
             comboBox2.Refresh();
         }
 
         public void load_values()
         {
-            DatabaseManager db = new DatabaseManager();
-            List<AttributeModel> attributes = db.get_attributes();
-            AttributeModel selected_attribute = attributes[comboBox1.SelectedIndex];
+            textBox1.Text = "";
+            if (comboBox1.Items.Count != 0)
+            {
+                DatabaseManager db = new DatabaseManager();
+                List<AttributeModel> attributes = db.get_attributes();
+                AttributeModel selected_attribute = attributes[comboBox1.SelectedIndex];
 
-            string value = db.get_value(selected_attribute.id);
-            textBox1.Text = value;
+                string value = db.get_value(selected_attribute.id);
+                textBox1.Text = value;
+            }
         }
 
         public void load_attributes()
@@ -58,7 +66,8 @@ namespace WTC.GUI
                 comboBox1.Items.Add(attribute.name);
             }
 
-            comboBox1.SelectedIndex = 0;
+            if (comboBox1.Items.Count != 0)
+                comboBox1.SelectedIndex = 0;
             comboBox1.Refresh();
         }
 
@@ -112,6 +121,9 @@ namespace WTC.GUI
 
         public bool check_value()
         {
+            if (comboBox1.Items.Count == 0)
+                return false;
+
             string value = textBox1.Text;
             string[] words = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int index = comboBox2.SelectedIndex;

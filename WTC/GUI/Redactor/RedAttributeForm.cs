@@ -63,16 +63,22 @@ namespace WTC.GUI
 
         public void AddAttr()
         {
-            DatabaseManager db = new DatabaseManager();
-            int id = db.search_attribute(textBox1.Text);
-            if (id < 0)
-            {
-                dataGridView1.Rows.Add(textBox1.Text);
-                db.add_attribute(textBox1.Text, 0);
-                MessageBox.Show(string.Format("Добавлен признак: {0}.", textBox1.Text), "Результат", MessageBoxButtons.OK);
-            }
+            string name = textBox1.Text;
+            if (name.Trim() == "")
+                MessageBox.Show("Ошибка ввода", "Результат", MessageBoxButtons.OK);
             else
-                MessageBox.Show(string.Format("Ошибка. Признак {0} уже существует.", textBox1.Text), "Результат", MessageBoxButtons.OK);
+            {
+                DatabaseManager db = new DatabaseManager();
+                int id = db.search_attribute(name);
+                if (id < 0)
+                {
+                    dataGridView1.Rows.Add(name);
+                    db.add_attribute(textBox1.Text, 0);
+                    MessageBox.Show(string.Format("Добавлен признак: {0}.", name), "Результат", MessageBoxButtons.OK);
+                }
+                else
+                    MessageBox.Show(string.Format("Ошибка. Признак {0} уже существует.", name), "Результат", MessageBoxButtons.OK);
+            }
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

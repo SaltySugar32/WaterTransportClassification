@@ -69,12 +69,14 @@ namespace WTC.GUI
 
             DatabaseManager db = new DatabaseManager();
             List<ClassModel> classes = db.get_classes();
+
             foreach (ClassModel cls in classes)
             {
                 comboBox1.Items.Add(cls.name);
             }
 
-            comboBox1.SelectedIndex = 0;
+            if (comboBox1.Items.Count != 0)
+                comboBox1.SelectedIndex = 0;
             comboBox1.Refresh();
         }
 
@@ -83,25 +85,28 @@ namespace WTC.GUI
             dataGridView1.Rows.Clear();
             dataGridView2.Rows.Clear();
 
-            DatabaseManager db = new DatabaseManager();
-            List<ClassModel> classes = db.get_classes();
-            List<AttributeModel> attributes = db.get_attributes();
-            ClassModel selected_class = classes[comboBox1.SelectedIndex];
-            List<AttributeModel> description = db.get_description(selected_class.id);
-
-            foreach (AttributeModel attr in attributes)
+            if (comboBox1.Items.Count != 0)
             {
-                bool found = false;
-                foreach(AttributeModel desc in description)
-                {
-                    if (desc.name == attr.name)
-                        found = true;
-                }
+                DatabaseManager db = new DatabaseManager();
+                List<ClassModel> classes = db.get_classes();
+                List<AttributeModel> attributes = db.get_attributes();
+                ClassModel selected_class = classes[comboBox1.SelectedIndex];
+                List<AttributeModel> description = db.get_description(selected_class.id);
 
-                if (found)
-                    dataGridView2.Rows.Add(attr.name);
-                else
-                    dataGridView1.Rows.Add(attr.name);
+                foreach (AttributeModel attr in attributes)
+                {
+                    bool found = false;
+                    foreach (AttributeModel desc in description)
+                    {
+                        if (desc.name == attr.name)
+                            found = true;
+                    }
+
+                    if (found)
+                        dataGridView2.Rows.Add(attr.name);
+                    else
+                        dataGridView1.Rows.Add(attr.name);
+                }
             }
 
         }
