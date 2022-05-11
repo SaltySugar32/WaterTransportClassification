@@ -19,6 +19,7 @@ namespace WTC.GUI
             load_attributes();
             load_types();
             load_values();
+            comboBox2.Enabled = false;
             textBox1.Enabled = false;
         }
 
@@ -73,6 +74,7 @@ namespace WTC.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            comboBox2.Enabled = true;
             textBox1.Enabled = true;
         }
 
@@ -124,6 +126,7 @@ namespace WTC.GUI
             else
                 MessageBox.Show("Ошибка ввода", "Результат", MessageBoxButtons.OK);
 
+            comboBox2.Enabled = false;
             textBox1.Enabled=false;
         }
 
