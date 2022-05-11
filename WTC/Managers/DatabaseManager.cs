@@ -141,6 +141,15 @@ namespace WTC.Managers
             closeCon();
         }
 
+        public void update_values(int attr_id, string values)
+        {
+            openCon();
+            string query = "UPDATE generalvalues SET possible_values='" + values + "' WHERE attribute_id='" + attr_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
         public void remove_values_by_attribute(int attr_id)
         {
             openCon();
@@ -167,6 +176,15 @@ namespace WTC.Managers
         {
             openCon();
             string query = "DELETE FROM classvalues WHERE class_id='" + class_id + "' AND attribute_id='" + attr_id + "' AND possible_values='" + values + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
+        public void update_classvalues(int class_id, int attr_id, string values)
+        {
+            openCon();
+            string query = "UPDATE classvalues SET possible_values='" + values + "' WHERE class_id='" + class_id + "' AND attribute_id='" + attr_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             cmd.ExecuteNonQuery();
             closeCon();

@@ -104,14 +104,21 @@ namespace WTC.GUI
                 DatabaseManager db = new DatabaseManager();
                 List<AttributeModel> attributes = db.get_attributes();
                 AttributeModel selected_attribute = attributes[comboBox1.SelectedIndex];
-                string value = db.get_value(selected_attribute.id);
-
-                db.remove_values(selected_attribute.id, value);
-                db.add_values(selected_attribute.id, textBox1.Text);
-
-                db.update_attribute(selected_attribute.name, comboBox2.SelectedIndex);
-
-                MessageBox.Show(string.Format("Добавлены значения '{0}' для признака '{1}'", textBox1.Text, selected_attribute.name), "Результат", MessageBoxButtons.OK);
+                string original = db.get_value(selected_attribute.id);
+                if (original == null)
+                {
+                    db.add_values(selected_attribute.id, textBox1.Text);
+                    MessageBox.Show(string.Format("Добавлены значения '{0}' для признака '{1}'", textBox1.Text, selected_attribute.name), "Результат", MessageBoxButtons.OK);
+                }
+                else if ((original != textBox1.Text) || (comboBox2.SelectedIndex != selected_attribute.type))
+                {
+                    db.update_attribute(selected_attribute.name, comboBox2.SelectedIndex);
+                    db.update_values(selected_attribute.id, textBox1.Text);
+                    db.remove_classvalues_by_attribute(selected_attribute.id);
+                    MessageBox.Show(string.Format("Добавлены значения '{0}' для признака '{1}'", textBox1.Text, selected_attribute.name), "Результат", MessageBoxButtons.OK);
+                }
+                else
+                    MessageBox.Show("Ошибка. Нет изменений", "Результат", MessageBoxButtons.OK);
             }
             else
                 MessageBox.Show("Ошибка ввода", "Результат", MessageBoxButtons.OK);

@@ -151,12 +151,19 @@ namespace WTC.GUI
                 List<AttributeModel> description = db.get_description(selected_class.id);
                 AttributeModel selected_attribute = description[comboBox3.SelectedIndex];
 
-                string value = db.get_classvalue(selected_class.id, selected_attribute.id);
-
-                db.remove_classvalues(selected_class.id, selected_attribute.id, value);
-                db.add_classvalues(selected_class.id, selected_attribute.id, textBox1.Text);
-
-                MessageBox.Show(string.Format("Добавлены значения '{0}' для признака '{1}'", textBox1.Text, selected_attribute.name), "Результат", MessageBoxButtons.OK);
+                string original = db.get_classvalue(selected_class.id, selected_attribute.id);
+                if (original == null)
+                {
+                    db.add_classvalues(selected_class.id, selected_attribute.id, textBox1.Text);
+                    MessageBox.Show(string.Format("Добавлены значения '{0}' для признака '{1}'", textBox1.Text, selected_attribute.name), "Результат", MessageBoxButtons.OK);
+                }
+                else if (original != textBox1.Text)
+                {
+                    db.update_classvalues(selected_class.id, selected_attribute.id, textBox1.Text);
+                    MessageBox.Show(string.Format("Добавлены значения '{0}' для признака '{1}'", textBox1.Text, selected_attribute.name), "Результат", MessageBoxButtons.OK);
+                }
+                else
+                    MessageBox.Show("Ошибка. Нет изменений", "Результат", MessageBoxButtons.OK);
             }
             else
                 MessageBox.Show("Ошибка ввода", "Результат", MessageBoxButtons.OK);
