@@ -24,7 +24,9 @@ namespace WTC.GUI
         public void DGVInit()
         {
             int button_width = 30;
-            int width = dataGridView1.Width - button_width - 10;
+            dataGridView1.ScrollBars = ScrollBars.Vertical;
+            dataGridView2.ScrollBars = ScrollBars.Vertical;
+            int width = dataGridView1.Width - button_width - 15;
 
             DataGridViewButtonColumn button_column_plus = new DataGridViewButtonColumn();
             button_column_plus.HeaderText = "";

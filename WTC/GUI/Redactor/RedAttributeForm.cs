@@ -23,7 +23,8 @@ namespace WTC.GUI
 
         public void DGVInit()
         {
-            int width = dataGridView1.Width-10;
+            dataGridView1.ScrollBars = ScrollBars.Vertical;
+            int width = dataGridView1.Width - 15;
 
             DataGridViewButtonColumn delete_button_column = new DataGridViewButtonColumn();
             delete_button_column.HeaderText = "";
