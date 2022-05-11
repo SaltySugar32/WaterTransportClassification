@@ -36,61 +36,76 @@ namespace WTC.GUI
                 comboBox1.Items.Add(cls.name);
             }
 
-            comboBox1.SelectedIndex = 0;
+            if (comboBox1.Items.Count != 0)
+                comboBox1.SelectedIndex = 0;
+
             comboBox1.Refresh();
         }
 
         public void load_attributes()
         {
             comboBox3.Items.Clear();
-
-            DatabaseManager db = new DatabaseManager();
-            List<ClassModel> classes = db.get_classes();
-            ClassModel selected_class = classes[comboBox1.SelectedIndex];
-
-            List<AttributeModel> description = db.get_description(selected_class.id);
-
-            foreach(AttributeModel attr in description)
+            if (comboBox1.Items.Count != 0)
             {
-                comboBox3.Items.Add(attr.name);
+
+                DatabaseManager db = new DatabaseManager();
+                List<ClassModel> classes = db.get_classes();
+                ClassModel selected_class = classes[comboBox1.SelectedIndex];
+
+                List<AttributeModel> description = db.get_description(selected_class.id);
+
+                foreach (AttributeModel attr in description)
+                {
+                    comboBox3.Items.Add(attr.name);
+                }
+
+                if (comboBox3.Items.Count != 0)
+                    comboBox3.SelectedIndex = 0;
             }
 
-            comboBox3.SelectedIndex = 0;
             comboBox3.Refresh();
         }
 
         public void load_types()
         {
             comboBox2.Items.Clear();
+            if (comboBox3.Items.Count != 0)
+            {
+                DatabaseManager db = new DatabaseManager();
+                List<ClassModel> classes = db.get_classes();
+                ClassModel selected_class = classes[comboBox1.SelectedIndex];
 
-            DatabaseManager db = new DatabaseManager();
-            List<ClassModel> classes = db.get_classes();
-            ClassModel selected_class = classes[comboBox1.SelectedIndex];
+                List<AttributeModel> description = db.get_description(selected_class.id);
 
-            List<AttributeModel> description = db.get_description(selected_class.id);
-            AttributeModel selected_attribute = description[comboBox3.SelectedIndex];
+                AttributeModel selected_attribute = description[comboBox3.SelectedIndex];
 
-            comboBox2.Items.Add("Качественный признак");
-            comboBox2.Items.Add("Количественный признак");
+                comboBox2.Items.Add("Качественный признак");
+                comboBox2.Items.Add("Количественный признак");
 
-            comboBox2.SelectedIndex = selected_attribute.type;
+                comboBox2.SelectedIndex = selected_attribute.type;
+            }
             comboBox2.Refresh();
         }
 
         public void load_values()
         {
-            DatabaseManager db = new DatabaseManager();
-            List<ClassModel> classes = db.get_classes();
-            ClassModel selected_class = classes[comboBox1.SelectedIndex];
+            textBox1.Text = "";
+            label1.Text = "";
+            if (comboBox3.Items.Count != 0)
+            {
+                DatabaseManager db = new DatabaseManager();
+                List<ClassModel> classes = db.get_classes();
+                ClassModel selected_class = classes[comboBox1.SelectedIndex];
 
-            List<AttributeModel> description = db.get_description(selected_class.id);
-            AttributeModel selected_attribute = description[comboBox3.SelectedIndex];
+                List<AttributeModel> description = db.get_description(selected_class.id);
+                AttributeModel selected_attribute = description[comboBox3.SelectedIndex];
 
-            string general_value = "Возможные значения признака: " + db.get_value(selected_attribute.id) + "";
-            label1.Text = general_value;
+                string general_value = "Возможные значения признака: " + db.get_value(selected_attribute.id) + "";
+                label1.Text = general_value;
 
-            string value = db.get_classvalue(selected_class.id, selected_attribute.id);
-            textBox1.Text = value;
+                string value = db.get_classvalue(selected_class.id, selected_attribute.id);
+                textBox1.Text = value;
+            }
         }
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
@@ -151,6 +166,9 @@ namespace WTC.GUI
 
         public bool check_value()
         {
+            if (comboBox3.Items.Count == 0)
+                return false;
+
             DatabaseManager db = new DatabaseManager();
             List<ClassModel> classes = db.get_classes();
             ClassModel selected_class = classes[comboBox1.SelectedIndex];
