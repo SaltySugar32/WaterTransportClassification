@@ -51,6 +51,15 @@ namespace WTC.Managers
             closeCon();
         }
 
+        public void update_class(int class_id, string name)
+        {
+            openCon();
+            string query = "UPDATE classes SET name='" + name + "' WHERE id='" + class_id + "'";
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
         public void add_attribute(string name, int type)
         {
             openCon();
@@ -67,6 +76,15 @@ namespace WTC.Managers
         {
             openCon();
             string query = "DELETE FROM attributes WHERE name='" + name + "'"; 
+            SQLiteCommand cmd = new SQLiteCommand(query, con);
+            cmd.ExecuteNonQuery();
+            closeCon();
+        }
+
+        public void update_attribute(int attr_id, string name)
+        {
+            openCon();
+            string query = "UPDATE attributes SET name='" + name + "' WHERE id='" + attr_id + "'";
             SQLiteCommand cmd = new SQLiteCommand(query, con);
             cmd.ExecuteNonQuery();
             closeCon();

@@ -108,6 +108,7 @@ namespace WTC.GUI
                 if (original == null)
                 {
                     db.add_values(selected_attribute.id, textBox1.Text);
+                    db.update_attribute(selected_attribute.name, comboBox2.SelectedIndex);
                     MessageBox.Show(string.Format("Добавлены значения '{0}' для признака '{1}'", textBox1.Text, selected_attribute.name), "Результат", MessageBoxButtons.OK);
                 }
                 else if ((original != textBox1.Text) || (comboBox2.SelectedIndex != selected_attribute.type))

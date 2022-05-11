@@ -9,16 +9,48 @@ namespace WTC.Managers
 {
     internal class DataManager
     {
-        public static DataManager instance;
-
-        public static DataManager GetInstance()
+        public List<ClassModel> check_description_integrity()
         {
-            if(instance==null)
-                instance = new DataManager();
+            List<ClassModel> empty_classes = new List<ClassModel> ();
 
-            return instance;
+            DatabaseManager db = new DatabaseManager();
+            List<ClassModel> classes = db.get_classes();
+            foreach (ClassModel cls in classes)
+            {
+                List<AttributeModel> description = db.get_description(cls.id);
+                if (description.Count == 0)
+                    empty_classes.Add(cls);
+            }
+            return empty_classes;
         }
-        
+
+        public List<AttributeModel> check_attribute_values()
+        {
+            List<AttributeModel> empty_attribute_values = new List<AttributeModel> ();
+
+            DatabaseManager db = new DatabaseManager();
+            List<AttributeModel> attributes = db.get_attributes();
+            foreach (AttributeModel attr in attributes)
+            {
+                if (db.get_value(attr.id) == null)
+                    empty_attribute_values.Add(attr);
+            }
+            return empty_attribute_values;
+        }
+
+        public List<AttributeModel> check_attribute_class_values(int class_id)
+        {
+            List <AttributeModel> empty_attribute_classvalues = new List<AttributeModel> () ;
+
+            DatabaseManager db = new DatabaseManager();
+            List<AttributeModel> description = db.get_description(class_id);
+            foreach (AttributeModel attr in description)
+            {
+                if (db.get_classvalue(class_id, attr.id) == null)
+                    empty_attribute_classvalues.Add(attr);
+            }
+            return empty_attribute_classvalues;
+        }
 
     }
 }

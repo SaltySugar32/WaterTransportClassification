@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WTC.GUI.Redactor;
 using WTC.Managers;
 
 namespace WTC.GUI
@@ -25,17 +26,27 @@ namespace WTC.GUI
         {
             int width = dataGridView1.Width;
 
-            DataGridViewButtonColumn button_column = new DataGridViewButtonColumn();
-            button_column.HeaderText = "";
-            button_column.Width = (int)(width * 0.1);
-            button_column.Name = "buttonColumn";
-            button_column.Text = "Удалить";
-            button_column.UseColumnTextForButtonValue = true;
+            DataGridViewButtonColumn update_button_column = new DataGridViewButtonColumn();
+            update_button_column.HeaderText = "";
+            update_button_column.Width = (int)(width * 0.1);
+            update_button_column.Name = "update_buttonColumn";
+            update_button_column.Text = "Изменить";
+            update_button_column.UseColumnTextForButtonValue = true;
+
+            DataGridViewButtonColumn delete_button_column = new DataGridViewButtonColumn();
+            delete_button_column.HeaderText = "";
+            delete_button_column.Width = (int)(width * 0.1);
+            delete_button_column.Name = "delete_buttonColumn";
+            delete_button_column.Text = "Удалить";
+            delete_button_column.UseColumnTextForButtonValue = true;
+
+
 
             dataGridView1.Columns.Add("class", "КЛАССЫ ВОДНОГО ТРАНСПОРТА");
-            dataGridView1.Columns[0].Width = (int)(width * 0.9);
+            dataGridView1.Columns[0].Width = (int)(width * 0.8);
 
-            dataGridView1.Columns.Add(button_column);
+            dataGridView1.Columns.Add(update_button_column);
+            dataGridView1.Columns.Add(delete_button_column);
 
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.SteelBlue;
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10);
@@ -87,7 +98,15 @@ namespace WTC.GUI
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 1)
+            if(e.ColumnIndex == 1)
+            {
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+                string class_name = (string)row.Cells["class"].Value;
+                UpdateClassForm updateClassForm = new UpdateClassForm(class_name);
+                updateClassForm.ShowDialog();
+
+            }
+            else if (e.ColumnIndex == 2)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
                 string class_name = (string)row.Cells["class"].Value;
