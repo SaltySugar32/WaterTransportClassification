@@ -83,6 +83,8 @@ namespace WTC.GUI.Classifier
         private void button1_Click(object sender, EventArgs e)
         {
             bool correct = true;
+            string incorrect_attr_list = "";
+
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 if (row.Cells[3].Value == null)
@@ -91,12 +93,20 @@ namespace WTC.GUI.Classifier
                 if (!check_input(row))
                 {
                     correct = false;
-                    button1.Text = row.Index + " incorrect";
+                    incorrect_attr_list += "\n\t" + (string)row.Cells[0].Value;
                 }
                     
             }
             if (correct)
-                button1.Text = "cor";
+            {
+
+            }
+
+            else
+            {
+                string error_text = "Введено неверное значение признаков:" + incorrect_attr_list;
+                MessageBox.Show(error_text, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public bool check_input(DataGridViewRow row)
