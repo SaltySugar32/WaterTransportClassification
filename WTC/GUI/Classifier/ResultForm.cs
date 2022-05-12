@@ -31,7 +31,7 @@ namespace WTC.GUI.Classifier
             {
                 List<AttributeModel> unfit_attributes = classify(cls);
                 if (unfit_attributes.Count == 0)
-                    label2.Text += "\n\t" + cls.name;
+                    label2.Text += "\t" + cls.name + "\n";
             }
         }
 
@@ -72,10 +72,13 @@ namespace WTC.GUI.Classifier
 
             foreach(AttributeModel attr in all_attributes)
             {
+                bool found = false;
                 foreach (AttributeModel desc in description)
                 {
                     if (desc.name == attr.name)
                     {
+                        found = true;
+
                         string class_value = db.get_classvalue(cls.id, attr.id);
                         string input_value = input_values[all_attributes.IndexOf(attr)];
 
@@ -85,6 +88,8 @@ namespace WTC.GUI.Classifier
                         }
                     }
                 }
+                if ((!found) && (input_values[all_attributes.IndexOf(attr)] != ""))
+                    unfit_attributes.Add(attr);
             }
 
             return unfit_attributes;
@@ -97,7 +102,7 @@ namespace WTC.GUI.Classifier
             string[] words = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if(value == "")
-                return false;
+                return true;
 
             if (words == null)
                 return false;

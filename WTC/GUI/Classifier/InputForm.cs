@@ -80,37 +80,54 @@ namespace WTC.GUI.Classifier
             }
         }
 
+        public bool check_empty_input()
+        {
+            bool not_empty = false;
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.Cells[3].Value == null)
+                    row.Cells[3].Value = "";
+
+                if((string)row.Cells[3].Value != "")
+                    not_empty = true;
+            }
+            return not_empty;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             List<string> values = new List<string>();
             bool correct = true;
             string incorrect_attr_list = "";
 
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            if (check_empty_input())
             {
-                if (row.Cells[3].Value == null)
-                    row.Cells[3].Value = "";
 
-                values.Add((string)row.Cells[3].Value);
-
-                if (!check_input(row))
+                foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
-                    correct = false;
-                    incorrect_attr_list += "\n\t" + (string)row.Cells[0].Value;
-                }
-                    
-            }
-            if (correct)
-            {
-                ResultForm resultForm = new ResultForm(values);
-                resultForm.ShowDialog();
-            }
+                    values.Add((string)row.Cells[3].Value);
 
-            else
-            {
-                string error_text = "Введено неверное значение признаков:" + incorrect_attr_list;
-                MessageBox.Show(error_text, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (!check_input(row))
+                    {
+                        correct = false;
+                        incorrect_attr_list += "\n\t" + (string)row.Cells[0].Value;
+                    }
+
+                }
+                if (correct)
+                {
+                    ResultForm resultForm = new ResultForm(values);
+                    resultForm.ShowDialog();
+                }
+
+                else
+                {
+                    string error_text = "Введено неверное значение признаков:" + incorrect_attr_list;
+                    MessageBox.Show(error_text, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+            else
+                MessageBox.Show("Не задан ни один признак.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public bool check_input(DataGridViewRow row)
