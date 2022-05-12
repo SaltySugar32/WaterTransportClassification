@@ -82,6 +82,7 @@ namespace WTC.GUI.Classifier
 
         private void button1_Click(object sender, EventArgs e)
         {
+            List<string> values = new List<string>();
             bool correct = true;
             string incorrect_attr_list = "";
 
@@ -89,6 +90,8 @@ namespace WTC.GUI.Classifier
             {
                 if (row.Cells[3].Value == null)
                     row.Cells[3].Value = "";
+
+                values.Add((string)row.Cells[3].Value);
 
                 if (!check_input(row))
                 {
@@ -99,7 +102,8 @@ namespace WTC.GUI.Classifier
             }
             if (correct)
             {
-
+                ResultForm resultForm = new ResultForm(values);
+                resultForm.ShowDialog();
             }
 
             else
