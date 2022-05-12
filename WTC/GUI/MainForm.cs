@@ -1,4 +1,5 @@
 using WTC.GUI;
+using WTC.GUI.Classifier;
 using WTC.Managers;
 
 namespace WTC
@@ -18,7 +19,12 @@ namespace WTC
 
         private void button2_Click(object sender, EventArgs e)
         {
-            check_data_integrity();
+            if (check_data_integrity())
+            {
+                InputForm inputForm = new InputForm();
+                inputForm.ShowDialog();
+            }
+
         }
 
         public bool check_data_integrity()
